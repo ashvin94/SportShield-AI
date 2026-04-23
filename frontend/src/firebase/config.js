@@ -12,6 +12,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
+// Simple validation to prevent white-screen crashes if env vars are missing on Netlify
+if (!firebaseConfig.apiKey) {
+  console.error("❌ Firebase API Key is missing! Check your Netlify environment variables.");
+}
+
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);

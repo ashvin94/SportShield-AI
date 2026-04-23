@@ -3,7 +3,6 @@ import Navbar from "./components/Navbar";
 import ServerWaker from "./components/ServerWaker";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import UploadPage from "./pages/UploadPage";
 import MyNFTsPage from "./pages/MyNFTsPage";
 import CheckPage from "./pages/CheckPage";
@@ -17,7 +16,6 @@ function App() {
       <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-6 md:px-8">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
           <Route
             path="/upload"
             element={

@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContext";
 import logoImg from "../assets/img/logo.jpg";
 
@@ -14,17 +13,8 @@ const links = [
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
   const { walletAddress, connecting, isWrongNetwork, connectWallet, disconnectWallet, switchNetwork } = useWallet();
-  const navigate = useNavigate();
   const location = useLocation();
-
-  const handleLogout = async () => {
-    await logout();
-    disconnectWallet();
-    toast.success("Logged out successfully");
-    navigate("/");
-  };
 
   const handleWalletConnect = async () => {
     if (isWrongNetwork) {
@@ -131,7 +121,7 @@ function Navbar() {
       </div>
     </header>
 
-    {/* Mobile Menu Overlay — must be outside header because backdrop-filter breaks position:fixed */}
+    {/* Mobile Menu Overlay */}
     {isMenuOpen && (
       <div className="fixed inset-0 top-[57px] z-[60] bg-[#020617] md:hidden animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
         <nav className="flex flex-col gap-2 p-5">
@@ -149,28 +139,6 @@ function Navbar() {
               {link.label}
             </Link>
           ))}
-          
-          <div className="mt-4 border-t border-slate-800 pt-4">
-            {user ? (
-              <div className="flex flex-col gap-3">
-                <p className="text-sm text-slate-400 px-4 break-all">Logged in as {user.email}</p>
-                <button
-                  onClick={handleLogout}
-                  className="w-full rounded-xl bg-red-900/20 border border-red-500/40 px-4 py-3 text-center font-bold text-red-300"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                onClick={() => setIsMenuOpen(false)}
-                className="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-bold text-white"
-              >
-                Login to Creator Dashboard
-              </Link>
-            )}
-          </div>
         </nav>
       </div>
     )}

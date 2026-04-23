@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { motion } from "framer-motion";
 import FileUpload from "../components/FileUpload";
 import Spinner from "../components/Spinner";
-import { useAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContext";
 
 
@@ -89,7 +88,6 @@ function UploadPage() {
   const [uploaded, setUploaded] = useState(null);
   const [step, setStep] = useState("");
   const [timeTaken, setTimeTaken] = useState(null); // Time in seconds
-  const { user } = useAuth();
   const { walletAddress, connectWallet, isWrongNetwork, switchNetwork } = useWallet();
 
   const handleRegister = async () => {
@@ -115,8 +113,8 @@ function UploadPage() {
       // 2. Call backend — pass wallet address as owner
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("authorName", user?.email || "Sports Creator");
-      formData.append("walletAddress", walletAddress); // Real owner!
+      formData.append("authorName", walletAddress); // Using wallet address as identifier
+      formData.append("walletAddress", walletAddress);
 
       const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
       const response = await fetch(`${API_URL}/register`, { method: "POST", body: formData });

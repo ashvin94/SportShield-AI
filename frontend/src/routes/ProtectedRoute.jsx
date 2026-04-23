@@ -1,17 +1,18 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useWallet } from "../context/WalletContext";
 import Spinner from "../components/Spinner";
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { walletAddress, connecting } = useWallet();
   const location = useLocation();
 
-  if (loading) {
-    return <Spinner label="Authenticating..." />;
+  if (connecting) {
+    return <Spinner label="Checking wallet connection..." />;
   }
 
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
+  if (!walletAddress) {
+    // Instead of login, we redirect to home where they can connect wallet
+    return <Navigate to="/" replace state={{ from: location }} />;
   }
 
   return children;

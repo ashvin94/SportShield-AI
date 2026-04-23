@@ -5,7 +5,7 @@ import FileUpload from "../components/FileUpload";
 import Spinner from "../components/Spinner";
 import { useAuth } from "../context/AuthContext";
 import { useWallet } from "../context/WalletContext";
-import { buildAssetFingerprints, getAllNfts } from "../firebase/assets";
+
 
 function GeminiBox({ analysis }) {
   if (!analysis) return null;
@@ -106,37 +106,6 @@ function UploadPage() {
 
     try {
       setLoading(true);
-      setStep("🔍 Checking fingerprints against registered sports media...");
-
-      // 1. Frontend similarity pre-check
-      const records = await getAllNfts();
-      const fingerprints = await buildAssetFingerprints(file);
-      const exactCopy = records.find((r) => (r.sha256 || r.hash) === fingerprints.hash);
-      if (exactCopy) {
-        toast.error("This file is already registered in SportShield!");
-        setLoading(false);
-        return;
-      }
-
-      if (fingerprints.pHash) {
-        for (const nft of records) {
-          const targetPHash = nft.similarityHash || nft.pHash;
-          if (targetPHash) {
-            let distance = 0;
-            const len = Math.min(fingerprints.pHash.length, targetPHash.length);
-            for (let i = 0; i < len; i++) {
-              if (fingerprints.pHash[i] !== targetPHash[i]) distance++;
-            }
-            const sim = 100 - Math.floor((distance / len) * 100);
-            if (sim > 85) {
-              toast.error(`Highly similar content found (${sim}% match). Cannot register.`);
-              setLoading(false);
-              return;
-            }
-          }
-        }
-      }
-
       setStep("🤖 Sending to Gemini AI for sports content analysis...");
       toast.loading("Registering on SportShield AI...", { id: "reg" });
 

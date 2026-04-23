@@ -9,7 +9,7 @@ function GeminiBox({ analysis }) {
   if (!analysis) return null;
   return (
     <div className="ai-box rounded-xl p-4 space-y-4 text-sm mt-3 border border-cyan-900/30">
-      <div className="flex items-center justify-between border-b border-cyan-900/30 pb-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-cyan-900/30 pb-2 gap-2">
         <p className="text-xs uppercase tracking-widest text-cyan-400 font-bold">
           🤖 Gemini AI Deep Analysis
         </p>
@@ -212,28 +212,28 @@ function CheckPage() {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="brand-font text-3xl font-black text-white">
+        <h2 className="brand-font text-2xl sm:text-3xl font-black text-white">
           🔍 Detect <span className="text-cyan-400">Sports Piracy</span>
         </h2>
-        <p className="mt-2 text-slate-400">
+        <p className="mt-2 text-sm text-slate-400">
           Upload any sports content to check if it is original or a manipulated/pirated copy. Choose quick check or full AI scan.
         </p>
       </div>
 
       <FileUpload file={file} onFileChange={(f) => { setFile(f); setResult(null); setBackendResult(null); }} />
 
-      <div className="flex gap-3 flex-wrap">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="button"
           onClick={runFrontendCheck}
-          className="flex-1 rounded-xl border border-blue-600/50 bg-blue-900/30 py-3 text-sm font-bold text-blue-200 hover:bg-blue-800/40 transition-all"
+          className="flex-1 rounded-xl border border-blue-600/50 bg-blue-900/30 py-3 px-4 text-sm font-bold text-blue-200 hover:bg-blue-800/40 transition-all"
         >
           ⚡ Quick Fingerprint Check
         </button>
         <button
           type="button"
           onClick={runBackendCheck}
-          className="flex-1 wallet-btn rounded-xl py-3 text-sm font-bold text-white"
+          className="flex-1 wallet-btn rounded-xl py-3 px-4 text-sm font-bold text-white"
         >
           🤖 Full Gemini AI Scan
         </button>
@@ -248,18 +248,18 @@ function CheckPage() {
           animate={{ opacity: 1, y: 0 }}
           className="glass-card rounded-2xl p-5 space-y-4"
         >
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
             <p className="text-lg font-bold text-white">Analysis Result</p>
-            <span className={`rounded-full px-4 py-1 text-sm font-bold ${result.status === "Original" ? "badge-original" : "badge-duplicate"}`}>
+            <span className={`rounded-full px-4 py-1 text-sm font-bold shrink-0 ${result.status === "Original" ? "badge-original" : "badge-duplicate"}`}>
               {result.status === "Original" ? "✅ Original" : "🚨 Duplicate"}
             </span>
           </div>
           <SimilarityMeter score={result.similarity ?? 0} />
           {details && (
             <div className="space-y-2 text-sm">
-              <p className="text-slate-300">📄 Matched: <span className="text-white">{details.matchedFile}</span></p>
-              <p className="text-slate-300">👤 Owner: <span className="text-white font-mono">{details.matchedOwner}</span></p>
-              <p className="text-slate-300">🔗 Hash: <span className="font-mono text-slate-400">{details.matchedHash}</span></p>
+              <p className="text-slate-300 break-all">📄 Matched: <span className="text-white">{details.matchedFile}</span></p>
+              <p className="text-slate-300 break-all">👤 Owner: <span className="text-white font-mono">{details.matchedOwner}</span></p>
+              <p className="text-slate-300 break-all">🔗 Hash: <span className="font-mono text-slate-400">{details.matchedHash}</span></p>
               <p className="text-slate-300">⚙️ Method: <span className="text-cyan-300">{details.method}</span></p>
               <p className="text-slate-300">🎯 Confidence: <span className="text-white">{details.confidence}</span></p>
               <div className={`rounded-lg p-3 text-sm ${result.status === "Original" ? "badge-original" : "badge-duplicate"}`}>
@@ -297,8 +297,8 @@ function CheckPage() {
 
           {backendResult.similarContent && (
             <div className="text-sm space-y-1">
-              <p className="text-slate-300">📄 Original Owner: <span className="text-white font-mono">{backendResult.similarContent.owner}</span></p>
-              <p className="text-slate-300">📁 Original File: <span className="text-white">{backendResult.similarContent.fileName}</span></p>
+              <p className="text-slate-300 break-all">📄 Original Owner: <span className="text-white font-mono">{backendResult.similarContent.owner}</span></p>
+              <p className="text-slate-300 break-all">📁 Original File: <span className="text-white">{backendResult.similarContent.fileName}</span></p>
               <p className="text-slate-300">📅 Registered: <span className="text-slate-400">{new Date(backendResult.similarContent.registeredAt).toLocaleDateString()}</span></p>
             </div>
           )}

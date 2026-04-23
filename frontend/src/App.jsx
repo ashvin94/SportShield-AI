@@ -9,7 +9,7 @@ import CheckPage from "./pages/CheckPage";
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
+    <div className="min-h-screen bg-slate-950 text-white overflow-x-hidden">
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.2),_transparent_55%),radial-gradient(circle_at_bottom,_rgba(30,64,175,0.2),_transparent_35%)]" />
       <Navbar />
       <main className="mx-auto w-full max-w-7xl px-4 pb-10 pt-6 md:px-8">

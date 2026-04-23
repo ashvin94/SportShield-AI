@@ -9,6 +9,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import rateLimit from "express-rate-limit";
 
 import { generateSHA256, generatePHash, comparePHashes, generateVideoPHash } from "./hash.js";
 import { analyzeWithGemini, analyzeTextWithGemini } from "./gemini.js";
@@ -24,8 +25,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(cors());
+app.use(cors({ origin: ["http://localhost:5173", "http://localhost:3000"] })); // Update with Netlify URL later
 app.use(express.json());
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // Limit each IP to 20 requests per `window` (here, per 15 minutes)
+  message: { error: "Too many requests from this IP, please try again after 15 minutes" },
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -66,7 +73,7 @@ function getFileCategory(mimeType) {
 
 app.get("/test", (req, res) => {
   res.json({
-    message: "✅ ChainGuard Sports Server is running!",
+    message: "✅ SportShield AI Server is running!",
     geminiKey: process.env.GEMINI_API_KEY ? "✅ Found" : "❌ Missing",
     firebase: process.env.FIREBASE_PROJECT_ID ? "✅ Found" : "❌ Missing",
     blockchain: process.env.DEPLOYER_PRIVATE_KEY ? "✅ Found" : "❌ Missing",
@@ -74,7 +81,7 @@ app.get("/test", (req, res) => {
   });
 });
 
-app.post("/register", upload.single("file"), async (req, res) => {
+app.post("/register", apiLimiter, upload.single("file"), async (req, res) => {
   const filePath = req.file?.path;
   const tempDir = filePath ? filePath + "_temp" : null;
   try {
@@ -113,13 +120,15 @@ app.post("/register", upload.single("file"), async (req, res) => {
     console.log("☁️ Uploading to IPFS...");
     const contentCID = await uploadToIPFS(filePath);
 
-    const nftResult = await mintNFTFromBackend(sha256, contentCID, originalname, category, geminiResult.description || `${category} content`);
+    const ownerAddress = req.body.walletAddress || "0x0000000000000000000000000000000000000000";
+
+    const nftResult = await mintNFTFromBackend(ownerAddress, sha256, contentCID, originalname, category, geminiResult.description || `${category} content`);
 
     const assetData = {
       fileName: originalname, category, mimeType: mimetype, fileSize: size,
       sha256, similarityHash: similarityHash || null, documentFingerprint: documentData?.fingerprint || null,
       geminiAnalysis: geminiResult,
-      owner: req.body.walletAddress || req.body.authorName || "anonymous",
+      owner: ownerAddress,
       nftTxHash: nftResult.success ? nftResult.txHash : null,
       ipfsUri: contentCID,
       timestamp: new Date().toISOString(), status: "registered",
@@ -242,7 +251,7 @@ app.post("/detect", upload.single("file"), async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`\n🚀 ChainGuard Sports Server`);
+  console.log(`\n🚀 SportShield AI Server`);
   console.log(`📡 Running on: http://localhost:${PORT}`);
   console.log(`🔑 Gemini: ${process.env.GEMINI_API_KEY ? "✅" : "❌"}`);
   console.log(`🔥 Firebase: ${process.env.FIREBASE_PROJECT_ID ? "✅" : "❌"}`);

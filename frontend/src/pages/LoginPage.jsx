@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 function LoginPage() {
-  const { login, loginWithGoogle, register } = useAuth();
+  const { login, loginWithGoogle, register, sendVerification, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isRegistering, setIsRegistering] = useState(false);
@@ -20,12 +20,40 @@ function LoginPage() {
     try {
       if (isRegistering) {
         await register(email, password);
-        toast.success("Account created successfully");
+        await sendVerification();
+        toast.success("Verification email sent! Please check your inbox.", { duration: 6000 });
+        setIsRegistering(false);
       } else {
-        await login(email, password);
+        const userCredential = await login(email, password);
+        const user = userCredential.user;
+        
+        if (!user.emailVerified) {
+          toast.error(
+            <div className="flex flex-col gap-2">
+              <p>Email not verified.</p>
+              <button 
+                onClick={async () => {
+                  try {
+                    await sendVerification();
+                    toast.success("Verification email resent!");
+                  } catch (e) {
+                    toast.error("Failed to resend. Try again later.");
+                  }
+                }}
+                className="text-xs font-bold underline"
+              >
+                Resend Verification Email
+              </button>
+            </div>,
+            { duration: 6000 }
+          );
+          // We don't logout immediately so they can click the Resend button
+          return;
+        }
+        
         toast.success("Welcome back");
+        navigate(redirectPath, { replace: true });
       }
-      navigate(redirectPath, { replace: true });
     } catch (error) {
       toast.error(error.message || "Authentication failed");
     } finally {

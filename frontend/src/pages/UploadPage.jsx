@@ -11,7 +11,7 @@ function GeminiBox({ analysis }) {
   if (!analysis) return null;
   return (
     <div className="ai-box rounded-xl p-4 space-y-4 text-sm mt-3 border border-cyan-900/30">
-      <div className="flex items-center justify-between border-b border-cyan-900/30 pb-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-cyan-900/30 pb-2 gap-2">
         <p className="text-xs uppercase tracking-widest text-cyan-400 font-bold">
           🤖 Gemini AI Analysis
         </p>
@@ -115,7 +115,8 @@ function UploadPage() {
       formData.append("authorName", user?.email || "Sports Creator");
       formData.append("walletAddress", walletAddress); // Real owner!
 
-      const response = await fetch("http://localhost:5000/register", { method: "POST", body: formData });
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/register`, { method: "POST", body: formData });
       const result = await response.json();
       toast.dismiss("reg");
 
@@ -151,31 +152,31 @@ function UploadPage() {
   return (
     <section className="space-y-6">
       <div>
-        <h2 className="brand-font text-3xl font-black text-white">
+        <h2 className="brand-font text-2xl sm:text-3xl font-black text-white">
           🛡️ Shield Your <span className="text-cyan-400">Sports Media</span>
         </h2>
-        <p className="mt-2 text-slate-400">
+        <p className="mt-2 text-sm text-slate-400">
           Upload sports content to register ownership. Gemini AI analyzes authenticity, Pinata IPFS stores the proof, and Polygon blockchain mints your NFT.
         </p>
       </div>
 
       {/* Wallet warning */}
       {!walletAddress && (
-        <div className="badge-suspicious rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1">
+        <div className="badge-suspicious rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <div className="space-y-1 min-w-0">
             <p className="text-sm font-bold text-rose-300">⚠️ Wallet Not Connected</p>
             <p className="text-xs text-rose-200/70">Connect your MetaMask wallet to claim ownership. Need test MATIC? <a href="https://faucet.polygon.technology/" target="_blank" rel="noopener noreferrer" className="underline text-cyan-400 hover:text-cyan-300">Get it from the faucet</a></p>
           </div>
-          <button onClick={connectWallet} className="wallet-btn rounded-lg px-4 py-2 text-sm font-bold text-white whitespace-nowrap">
+          <button onClick={connectWallet} className="wallet-btn rounded-lg px-4 py-2 text-sm font-bold text-white whitespace-nowrap shrink-0 w-full sm:w-auto text-center">
             🦊 Connect Wallet
           </button>
         </div>
       )}
 
       {walletAddress && (
-        <div className="badge-original rounded-xl p-3 flex items-center gap-2 text-sm">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Owner wallet: <span className="font-mono text-white">{walletAddress}</span></span>
+        <div className="badge-original rounded-xl p-3 flex items-center gap-2 text-sm overflow-hidden">
+          <span className="h-2 w-2 shrink-0 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="truncate">Owner wallet: <span className="font-mono text-white">{walletAddress}</span></span>
         </div>
       )}
 
@@ -216,7 +217,7 @@ function UploadPage() {
           {uploaded.nft?.txHash && (
             <div className="ai-box rounded-xl p-3 text-sm">
               <p className="text-xs text-cyan-400 mb-1 uppercase tracking-wider">⛓️ NFT Minted on Polygon Amoy</p>
-              <p className="text-xs text-slate-400">Owner: <span className="text-white font-mono">{walletAddress}</span></p>
+              <p className="text-xs text-slate-400 break-all">Owner: <span className="text-white font-mono">{walletAddress}</span></p>
               <a
                 href={`https://amoy.polygonscan.com/tx/${uploaded.nft.txHash}`}
                 target="_blank"

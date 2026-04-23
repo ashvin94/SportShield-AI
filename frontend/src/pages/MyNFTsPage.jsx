@@ -142,16 +142,16 @@ function MyNFTsPage() {
 
   return (
     <section className="space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
+      <div className="flex items-start justify-between gap-4 flex-col sm:flex-row">
         <div>
-          <h2 className="brand-font text-3xl font-black text-white">
+          <h2 className="brand-font text-2xl sm:text-3xl font-black text-white">
             🏆 My <span className="text-cyan-400">Protected Media</span>
           </h2>
           <p className="mt-1 text-slate-400">
             Your sports content registered on-chain with NFT proof of ownership.
           </p>
           {walletAddress && (
-            <p className="mt-1 text-xs text-emerald-400">
+            <p className="mt-1 text-xs text-emerald-400 break-all">
               🦊 Wallet: <span className="font-mono">{walletAddress.slice(0, 10)}...{walletAddress.slice(-8)}</span>
             </p>
           )}

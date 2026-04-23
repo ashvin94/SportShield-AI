@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
+  sendEmailVerification,
 } from "firebase/auth";
 import { auth, googleProvider } from "../firebase/config";
 
@@ -31,6 +32,9 @@ export function AuthProvider({ children }) {
         createUserWithEmailAndPassword(auth, email, password),
       loginWithGoogle: () => signInWithPopup(auth, googleProvider),
       logout: () => signOut(auth),
+      sendVerification: () => {
+        if (auth.currentUser) return sendEmailVerification(auth.currentUser);
+      },
     }),
     [user, loading]
   );

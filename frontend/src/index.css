@@ -139,8 +139,30 @@ body {
     font-size: 1.1rem;
   }
   .glass-card {
-    padding: 1.25rem;
+    padding: 1rem;
   }
+  /* Prevent any horizontal overflow on mobile */
+  body {
+    overflow-x: hidden;
+  }
+  /* Scale down AI analysis boxes */
+  .ai-box {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .brand-font {
+    font-size: 0.95rem;
+  }
+  .glass-card {
+    padding: 0.85rem;
+  }
+}
+
+/* Prevent long text from breaking layout */
+.font-mono {
+  word-break: break-all;
 }
 
 img {
@@ -151,3 +173,9 @@ img {
 html {
   scroll-behavior: smooth;
 }
+
+/* Prevent horizontal overflow without clipping fixed elements */
+body {
+  overflow-x: hidden;
+}
+

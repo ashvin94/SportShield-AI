@@ -45,7 +45,7 @@ function HomePage() {
         initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="glass-card relative overflow-hidden rounded-3xl p-8 text-center md:p-14 sport-glow"
+        className="glass-card relative overflow-hidden rounded-3xl p-6 text-center md:p-14 sport-glow"
       >
         {/* Background pitch lines decoration */}
         <div className="pointer-events-none absolute inset-0 opacity-5">
@@ -65,7 +65,7 @@ function HomePage() {
           <p className="text-xs uppercase tracking-[0.3em] text-cyan-400 font-semibold">
             AI · Web3 · NFT
           </p>
-          <h1 className="brand-font mx-auto mt-3 max-w-4xl text-3xl font-black leading-tight text-white sm:text-4xl md:text-5xl lg:text-6xl">
+          <h1 className="brand-font mx-auto mt-3 max-w-4xl text-2xl font-black leading-tight text-white sm:text-3xl md:text-5xl lg:text-6xl">
             SPORT<span className="text-cyan-400">SHIELD</span>{" "}
             <span className="text-blue-400">AI</span>
           </h1>
@@ -102,18 +102,18 @@ function HomePage() {
       </motion.section>
 
       {/* Stats Row */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-4">
         {stats.map((s, i) => (
           <motion.div
             key={s.label}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 * i + 0.3 }}
-            className="glass-card rounded-xl p-4 text-center"
+            className="glass-card rounded-xl p-3 sm:p-4 text-center overflow-hidden"
           >
-            <div className="text-2xl mb-1">{s.icon}</div>
-            <p className="text-xs text-slate-400 uppercase tracking-wider">{s.label}</p>
-            <p className="mt-0.5 text-sm font-semibold text-white">{s.value}</p>
+            <div className="text-xl sm:text-2xl mb-1">{s.icon}</div>
+            <p className="text-[10px] sm:text-xs text-slate-400 uppercase tracking-wider">{s.label}</p>
+            <p className="mt-0.5 text-xs sm:text-sm font-semibold text-white truncate">{s.value}</p>
           </motion.div>
         ))}
       </div>

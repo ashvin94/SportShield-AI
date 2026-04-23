@@ -22,7 +22,7 @@ export async function uploadToIPFS(filePath) {
     const readableStreamForFile = fs.createReadStream(filePath);
     const options = {
       pinataMetadata: {
-        name: `ChainGuard_${Date.now()}`,
+        name: `SportShield_${Date.now()}`,
       },
       pinataOptions: {
         cidVersion: 0,

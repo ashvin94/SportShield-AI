@@ -24,6 +24,7 @@ function getSigner() {
 const CONTRACT_ABI = [
   {
     inputs: [
+      { internalType: "address", name: "_owner", type: "address" },
       { internalType: "string", name: "_sha256Hash", type: "string" },
       { internalType: "string", name: "_contentCID", type: "string" },
       { internalType: "string", name: "_fileName", type: "string" },
@@ -94,6 +95,7 @@ const CONTRACT_ABI = [
 ];
 
 export async function mintNFTFromBackend(
+  ownerAddress,
   sha256Hash,
   contentCID,
   fileName,
@@ -111,6 +113,7 @@ export async function mintNFTFromBackend(
 
     // Your wallet pays gas here!
     const tx = await contract.mintNFT(
+      ownerAddress,
       sha256Hash,
       contentCID,
       fileName,

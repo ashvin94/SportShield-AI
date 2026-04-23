@@ -45,21 +45,22 @@ function Navbar() {
     : null;
 
   return (
+    <>
     <header className="sticky top-0 z-50 border-b border-blue-900/40 bg-[#020617]/85 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 md:px-8">
         {/* Logo + Brand */}
-        <Link to="/" className="flex items-center gap-3 group shrink-0">
+        <Link to="/" className="flex items-center gap-2 sm:gap-3 group shrink-0 min-w-0">
           <img
             src={logoImg}
             alt="SportShield AI Logo"
-            className="h-9 w-9 md:h-10 md:w-10 object-contain transition-transform duration-300 group-hover:scale-110 rounded-lg mix-blend-screen"
+            className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 object-contain transition-transform duration-300 group-hover:scale-110 rounded-lg shrink-0"
           />
-          <div className="flex flex-col leading-tight">
-            <span className="brand-font text-sm md:text-base font-bold text-white tracking-wide">
+          <div className="flex flex-col leading-tight min-w-0">
+            <span className="brand-font text-xs sm:text-sm md:text-base font-bold text-white tracking-wide truncate">
               SPORT<span className="text-cyan-400">SHIELD</span>
-              <span className="text-blue-400 text-[10px] md:text-xs ml-1">AI</span>
+              <span className="text-blue-400 text-[9px] sm:text-[10px] md:text-xs ml-0.5 sm:ml-1">AI</span>
             </span>
-            <span className="hidden md:block text-[8px] md:text-[10px] text-slate-400 tracking-widest uppercase">
+            <span className="hidden md:block text-[10px] text-slate-400 tracking-widest uppercase">
               Protecting Sports Media
             </span>
           </div>
@@ -83,11 +84,11 @@ function Navbar() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           <button
             onClick={handleWalletConnect}
             disabled={connecting}
-            className={`flex items-center gap-2 rounded-xl px-3 py-1.5 md:px-4 md:py-2 text-[10px] font-bold transition-all md:text-sm ${
+            className={`flex items-center gap-1.5 sm:gap-2 rounded-xl px-2.5 py-1.5 sm:px-3 md:px-4 md:py-2 text-[10px] sm:text-xs font-bold transition-all md:text-sm whitespace-nowrap ${
               isWrongNetwork 
                 ? "bg-rose-600 hover:bg-rose-500 text-white shadow-[0_0_15px_rgba(225,29,72,0.4)]"
                 : walletAddress
@@ -128,51 +129,52 @@ function Navbar() {
           </button>
         </div>
       </div>
-
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 top-[61px] z-40 bg-[#020617]/95 backdrop-blur-2xl md:hidden animate-in fade-in slide-in-from-top-4 duration-300">
-          <nav className="flex flex-col gap-2 p-6">
-            {links.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                onClick={() => setIsMenuOpen(false)}
-                className={`rounded-xl p-4 text-lg font-bold transition-all ${
-                  location.pathname === link.to
-                    ? "bg-blue-900/40 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]"
-                    : "text-slate-300 hover:bg-white/5"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-            
-            <div className="mt-6 border-t border-slate-800 pt-6">
-              {user ? (
-                <div className="flex flex-col gap-4">
-                  <p className="text-sm text-slate-400 px-4">Logged in as {user.email}</p>
-                  <button
-                    onClick={handleLogout}
-                    className="w-full rounded-xl bg-red-900/20 border border-red-500/40 p-4 text-center font-bold text-red-300"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  to="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block w-full rounded-xl bg-blue-600 p-4 text-center font-bold text-white"
-                >
-                  Login to Creator Dashboard
-                </Link>
-              )}
-            </div>
-          </nav>
-        </div>
-      )}
     </header>
+
+    {/* Mobile Menu Overlay — must be outside header because backdrop-filter breaks position:fixed */}
+    {isMenuOpen && (
+      <div className="fixed inset-0 top-[57px] z-[60] bg-[#020617] md:hidden animate-in fade-in slide-in-from-top-4 duration-300 overflow-y-auto">
+        <nav className="flex flex-col gap-2 p-5">
+          {links.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              onClick={() => setIsMenuOpen(false)}
+              className={`rounded-xl px-4 py-3.5 text-base font-bold transition-all ${
+                location.pathname === link.to
+                  ? "bg-blue-900/40 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]"
+                  : "text-slate-300 hover:bg-white/5"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+          
+          <div className="mt-4 border-t border-slate-800 pt-4">
+            {user ? (
+              <div className="flex flex-col gap-3">
+                <p className="text-sm text-slate-400 px-4 break-all">Logged in as {user.email}</p>
+                <button
+                  onClick={handleLogout}
+                  className="w-full rounded-xl bg-red-900/20 border border-red-500/40 px-4 py-3 text-center font-bold text-red-300"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setIsMenuOpen(false)}
+                className="block w-full rounded-xl bg-blue-600 px-4 py-3 text-center font-bold text-white"
+              >
+                Login to Creator Dashboard
+              </Link>
+            )}
+          </div>
+        </nav>
+      </div>
+    )}
+  </>
   );
 }
 

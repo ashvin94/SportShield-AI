@@ -197,7 +197,9 @@ function CheckPage() {
       toast.loading("Running Gemini AI deep scan...", { id: "scan" });
       const formData = new FormData();
       formData.append("file", file);
-      const res = await fetch("http://localhost:5000/detect", { method: "POST", body: formData });
+      
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const res = await fetch(`${API_URL}/detect`, { method: "POST", body: formData });
       const data = await res.json();
       toast.dismiss("scan");
       setBackendResult(data);

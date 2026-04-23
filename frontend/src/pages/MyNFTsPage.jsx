@@ -135,10 +135,11 @@ function MyNFTsPage() {
       }
     };
 
-    if (user) loadNfts();
+    loadNfts();
   }, [user, walletAddress, viewAll]);
 
-  if (loading) return <Spinner label="Loading your protected sports media..." />;
+  // Only show the spinner if we are actively loading AND have a reason to load (viewAll or user exists)
+  if (loading && (viewAll || user || walletAddress)) return <Spinner label="Loading protected sports media..." />;
 
   return (
     <section className="space-y-6">

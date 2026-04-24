@@ -1,66 +1,70 @@
-# 🛡️ SportShield AI: AI-Powered Media Anti-Piracy Platform
+# 🛡️ SportShield AI: Digital Asset Protection
 
-**Built for the Google "Build with AI" Hackathon 2026**
+**Built for the Google Solution Challenge 2026 - Build with AI**
 
-SportShield AI is an advanced, wallet-less decentralized application (dApp) designed to protect intellectual property in the sports media industry. By leveraging the advanced reasoning of **Google Gemini AI**, the ultra-fast data syncing of **Google Firebase**, perceptual hashing, and the immutable security of the **Polygon Blockchain**, we've created a frictionless pipeline for creators to protect their assets from deepfakes and piracy exactly the moment they are created.
+**Live Platform**: [https://sportshield.netlify.app/](https://sportshield.netlify.app/)
+**Backend Engine**: [https://sportshield-ai-ms2l.onrender.com](https://sportshield-ai-ms2l.onrender.com)
+
+**Team Leader**: Ashvin Patidar
+
+SportShield AI is an advanced, decentralized application (dApp) designed to protect the integrity of digital sports media. By leveraging the advanced reasoning of **Google Gemini AI**, the data structure of **Google Firebase**, advanced mathematical hashing, and the immutable security of the **Polygon Blockchain**, we have created a scalable solution to identify, track, and flag unauthorized use of official sports media in near real-time.
 
 ---
 
-## 🔥 Powered by Google Technologies
+## 🌟 Google Solution Challenge Focus Areas
 
-This project heavily utilizes the Google Cloud ecosystem to deliver lightning-fast, highly accurate AI & Database operations required for real-time piracy prevention:
+### 1. Technical Merit & Complexity (40%)
+- **Custom Cryptographic Engine**: Built entirely from scratch in Node.js to generate exact SHA-256 hashes and Perceptual Hashes (pHash) for images, videos, audio, and documents.
+- **Gasless Web3 Integration**: Users connect their MetaMask wallets, but the Node.js backend (`ethers.js`) securely handles the gas fees and proxy-mints the NFTs to the Polygon Amoy Testnet, allowing for a seamless Web2-like experience.
+- **Robust Architecture**: A decoupled React/Vite frontend (Netlify) communicating with a rate-limited, auto-waking Express backend (Render), ensuring high availability and DDoS protection.
+- **Security & Privacy**: Intellectual property is protected by logging a mathematical timestamped proof-of-work (CID) to the IPFS network and Polygon Amoy, avoiding the upload of physically large and private IP-owned files to public servers.
 
-- **🤖 Google Gemini v2.5 (Flash):** Deployed as a zero-shot multi-modal deepfake and contextual analyzer. The system feeds raw video frames, audio extractions, documents, and images straight into Gemini to instantly determine manipulation, outputting detailed contextual reports permanently etched into the blockchain.
-- **⚡ Google Firebase (Firestore & Auth):** Used as the hyper-speed "Similarity Engine" and secure identity provider with mandatory **Email Verification** to ensure only verified sports creators can register media.
+### 2. AI Integration & Innovation (25%)
+- **Google Gemini Integration**: Gemini acts as our primary "Forensic Analyst." When an asset is uploaded, the backend streams the data to the `@google/generative-ai` SDK. Gemini analyzes the content, provides rich metadata descriptions, and actively scans for signs of "AI Manipulation" or deepfakes.
+- **Multi-Modal Detection Pipeline**: Combines traditional algorithmic distance matrices (Hamming distance) with Generative AI analysis to catch pirates even if they crop, filter, or slightly alter the original media.
 
-## 🌟 Key Features
+### 3. Alignment With Cause (25%)
+- **The Problem**: Sports organizations generate massive volumes of high-value digital media that scatter across global platforms. This visibility gap leaves proprietary content highly vulnerable to widespread misappropriation and IP violations.
+- **The Solution**: Register once, protect everywhere. SportShield provides immutable ownership records and a fast `/detect` engine to flag piracy instantly.
 
-1. **Wallet-Less Web3 UX:** Users achieve true Web3 decentralized security without ever installing MetaMask, signing transactions, or paying gas fees. The centralized backend securely proxy-mints the NFTs to the blockchain **assigned to the user's actual wallet address**.
-2. **Multi-Modal Asset Detection:**
-   - **🖼️ Images:** pHash distance matrix calculations for visual duplicates.
-   - **🎬 Video:** Extracts 5 independent keyframes (via `ffmpeg`), running comparative pHashes bound together by majority-vote bit combination.
-   - **🎵 Audio:** Generates temporal energy profiles converting audio PCM to binary Hamming distance fingerprinting.
-   - **📄 Documents (PDF/TXT):** Evaluates dense word-frequency mapping patterns using Google Gemini analysis combined with SHA256 locking.
-3. **Decentralized Privacy:** Protects your intellectual property by logging a mathematical timestamped proof-of-work (CID) to the IPFS network and Polygon Amoy, completely avoiding the uploading of the physically large and private IP-owned file to the public internet space.
-4. **Insta-Piracy Blocking (409 Status):** Attempting to register an asset that shares a similarity distance of >10% immediately aborts the mint and warns the user of the exact registration timestamp of the original owner.
-5. **Security Hardened:** Implemented **Express Rate Limiting** to prevent gas-draining attacks and **Netlify Redirects** for seamless SPA routing in production.
+### 4. User Experience (10%)
+- **Frictionless Onboarding**: Seamless Web3 login via MetaMask. No email or password setup required.
+- **Engaging UI**: Built with Tailwind CSS and Framer Motion, the interface features a premium aesthetic, glassmorphism, and highly responsive design across mobile and desktop. 
+- **Real-Time Feedback**: Users get instant notifications on backend status (Server Waker), AI verification verdicts, and direct links to PolygonScan for blockchain transaction verification.
 
 ---
 
 ## 🛠️ Architecture & Stack
 
-- **Frontend:** React.js, Tailwind CSS, Framer Motion
-- **Backend:** Node.js, Express.js (Multer for Memory Streaming)
-- **AI Engine:** `@google/generative-ai` (Gemini 2.5 Flash SDK)
-- **Database Engine:** Google Firebase Admin SDK
-- **Blockchain Connectivity:** `ethers.js` (v6)
-- **Smart Contract:** Solidity (Deployed on Polygon Amoy Testnet)
-- **Signal Processing:** `sharp` (Images), `ffmpeg` (A/V extraction), `ipfs-only-hash` (Local Hash Gen)
+- **Frontend:** React.js, Tailwind CSS, Vite (Hosted on Netlify)
+- **Backend:** Node.js, Express.js, Multer (Hosted on Render)
+- **AI Engine:** Google Gemini SDK (`@google/generative-ai`)
+- **Database Engine:** Google Firebase (Firestore)
+- **Blockchain:** Polygon Amoy Testnet, `ethers.js` (v6)
+- **Decentralized Storage:** IPFS (via Pinata)
+- **Media Processing:** `sharp` (Images), `ffmpeg` (A/V), `ipfs-only-hash`
 
 ---
 
-## 🚀 Future Roadmap for Google Cloud Integration
-As we expand SportShield AI moving forward, we actively plan to integrate:
-- **Google Cloud Storage (GCP):** For enterprise-grade encrypted media blob hosting.
-- **Google Vertex AI:** Custom tuning a model specifically for evaluating subtle jersey and broadcast watermark stripping.
-
-## 💻 Running the App Locally
+## 💻 Running the Project Locally
 
 ### 1. Backend Setup
 ```bash
 cd backend
 npm install
-npm run dev
+# Create a .env file based on .env.example
+npm start
 ```
-Backend will launch on `http://localhost:5000`.
+*The backend runs on `http://localhost:5000`.*
 
 ### 2. Frontend Setup
 ```bash
 cd frontend
 npm install
+# Ensure .env is configured with the VITE_API_URL and VITE_FIREBASE config
 npm run dev
 ```
-Frontend will launch on `http://localhost:5173`.
+*The frontend runs on `http://localhost:5173`.*
 
 ---
-*Created with ❤️ for the Google Build Hackathon*
+*Created with ❤️ for the Google Solution Challenge 2026*

@@ -292,14 +292,17 @@ app.listen(PORT, () => {
 });
 
 // PREVENT RENDER SLEEP: Self-ping every 14 minutes
-const RENDER_URL = process.env.RENDER_EXTERNAL_URL;
-if (RENDER_URL) {
-  setInterval(async () => {
-    try {
-      await fetch(`${RENDER_URL}/test`);
-      console.log("⚓ Keep-alive ping sent to:", RENDER_URL);
-    } catch (e) {
-      console.error("⚓ Keep-alive failed:", e.message);
+const RENDER_URL = process.env.RENDER_EXTERNAL_URL || "https://sportshield-ai-ms2l.onrender.com";
+
+setInterval(async () => {
+  try {
+    const response = await fetch(`${RENDER_URL}/test`);
+    if (response.ok) {
+      console.log(`⚓ Keep-alive success: [${new Date().toLocaleTimeString()}] Pinged ${RENDER_URL}`);
+    } else {
+      console.log(`⚓ Keep-alive status: ${response.status} for ${RENDER_URL}`);
     }
-  }, 14 * 60 * 1000); // 14 mins
-}
+  } catch (e) {
+    console.error("⚓ Keep-alive failed:", e.message);
+  }
+}, 14 * 60 * 1000); // 14 mins

@@ -1,0 +1,15 @@
+name: Keep Render Backend Awake
+
+on:
+  schedule:
+    - cron: '*/14 * * * *' # Every 14 minutes
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Backend
+        run: |
+          curl -s https://sportshield-ai-ms2l.onrender.com/test > /dev/null
+          echo "Ping sent to SportShield AI Backend at $(date)"

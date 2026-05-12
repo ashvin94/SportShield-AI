@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import FileUpload from "../components/FileUpload";
 import Spinner from "../components/Spinner";
 import { useWallet } from "../context/WalletContext";
-
+import { friendlyGeminiDescription } from "../utils/geminiDisplay";
 
 function GeminiBox({ analysis }) {
   if (!analysis) return null;
@@ -49,7 +49,7 @@ function GeminiBox({ analysis }) {
         <div className="space-y-1">
           <p className="text-[10px] text-slate-500 uppercase font-bold">AI Observation</p>
           <p className="text-slate-300 leading-relaxed text-xs italic">
-            "{analysis.description}"
+            "{friendlyGeminiDescription(analysis.description)}"
           </p>
         </div>
       )}

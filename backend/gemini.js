@@ -6,6 +6,43 @@ dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+/** Walk `cause` chain — the SDK often puts the HTTP body only on nested errors. */
+function collectErrorText(error) {
+  if (!error) return "";
+  const chunks = [];
+  let e = error;
+  let depth = 0;
+  const seen = new Set();
+  while (e && depth++ < 8) {
+    if (seen.has(e)) break;
+    seen.add(e);
+    if (typeof e.message === "string" && e.message) chunks.push(e.message);
+    e = e.cause;
+  }
+  return chunks.join(" ") || String(error);
+}
+
+/** Short, actionable copy for the API response when Gemini fails. */
+function userFacingGeminiError(rawMessage) {
+  const msg = String(rawMessage || "");
+  const lower = msg.toLowerCase();
+  if (
+    lower.includes("location is not supported") ||
+    lower.includes("user location is not supported") ||
+    lower.includes("not supported for the api use")
+  ) {
+    return (
+      "Google Gemini is not available for this request’s region (common when the backend runs locally in an unsupported country). " +
+      "Deploy the API to hosting in a supported region (e.g. US/EU), use a VPN with a supported exit for local dev, or use Vertex AI Gemini in a supported Google Cloud region. " +
+      "Details: https://ai.google.dev/gemini-api/docs"
+    );
+  }
+  if (msg.includes("503")) {
+    return "High demand. Please try again later.";
+  }
+  return msg.replace(/^\[GoogleGenerativeAI Error\]:\s*/i, "").trim() || "Unknown error";
+}
+
 export async function analyzeWithGemini(filePath, mimeType, mode = "detect", retries = 2) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
@@ -20,7 +57,8 @@ export async function analyzeWithGemini(filePath, mimeType, mode = "detect", ret
 
     return parseGeminiResponse(result.response.text());
   } catch (error) {
-    if (error.message.includes("503") && retries > 0) {
+    const errText = collectErrorText(error);
+    if (errText.includes("503") && retries > 0) {
       console.warn(`Gemini 503 High Demand Error. Retrying... (${retries} retries left)`);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return analyzeWithGemini(filePath, mimeType, mode, retries - 1);
@@ -29,8 +67,8 @@ export async function analyzeWithGemini(filePath, mimeType, mode = "detect", ret
     return {
       verdict: "UNKNOWN",
       authenticityScore: 50,
-      description: "AI analysis unavailable: " + (error.message.includes("503") ? "High demand. Please try again later." : error.message),
-      error: error.message,
+      description: "AI analysis unavailable: " + userFacingGeminiError(errText),
+      error: errText,
     };
   }
 }
@@ -54,7 +92,8 @@ export async function analyzeTextWithGemini(textContent, mode = "register", retr
 
     return parseGeminiResponse(result.response.text());
   } catch (error) {
-    if (error.message.includes("503") && retries > 0) {
+    const errText = collectErrorText(error);
+    if (errText.includes("503") && retries > 0) {
       console.warn(`Gemini Text 503 High Demand Error. Retrying... (${retries} retries left)`);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       return analyzeTextWithGemini(textContent, mode, retries - 1);
@@ -62,8 +101,8 @@ export async function analyzeTextWithGemini(textContent, mode = "register", retr
     return {
       verdict: "UNKNOWN",
       authenticityScore: 50,
-      description: "AI text analysis unavailable: " + (error.message.includes("503") ? "High demand." : error.message),
-      error: error.message,
+      description: "AI text analysis unavailable: " + userFacingGeminiError(errText),
+      error: errText,
     };
   }
 }
